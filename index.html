@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>客廳串流啟動器</title>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --fg: #f5f5f5;
+      --muted: #888;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, "PingFang TC", "Helvetica Neue", sans-serif;
+      overflow: hidden;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 4vh 4vw;
+    }
+    h1 {
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 0 0 4vh 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 2.5vh 2.5vw;
+      width: 100%;
+      max-width: 1400px;
+      aspect-ratio: 16 / 8;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-radius: 16px;
+      text-decoration: none;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover, .card:focus {
+      transform: scale(1.03);
+      box-shadow: 0 12px 40px rgba(255,255,255,0.08);
+      outline: none;
+    }
+    .card .logo {
+      font-size: clamp(2rem, 6vw, 5rem);
+      line-height: 1;
+    }
+    .card .name {
+      font-size: clamp(0.9rem, 1.5vw, 1.4rem);
+      margin-top: 1.5vh;
+      opacity: 0.85;
+    }
+    .netflix { background: #000; color: #e50914; border: 2px solid #e50914; }
+    .netflix .logo { font-family: "Arial Black", sans-serif; }
+    .appletv { background: #000; color: #fff; border: 2px solid #fff; }
+    .hbomax { background: linear-gradient(135deg, #5d2dff, #9013fe); color: #fff; }
+    .youtube { background: #ff0000; color: #fff; }
+
+    footer {
+      margin-top: 3vh;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    kbd {
+      background: #222;
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: inherit;
+      font-size: 0.85em;
+    }
+  </style>
+</head>
+<body>
+  <h1>客廳串流啟動器</h1>
+  <div class="grid">
+    <a class="card netflix" href="https://www.netflix.com" target="_self">
+      <div class="logo">NETFLIX</div>
+      <div class="name">網飛</div>
+    </a>
+    <a class="card appletv" href="https://tv.apple.com" target="_self">
+      <div class="logo">Apple TV+</div>
+      <div class="name">蘋果</div>
+    </a>
+    <a class="card hbomax" href="https://play.max.com" target="_self">
+      <div class="logo">MAX</div>
+      <div class="name">HBO Max</div>
+    </a>
+    <a class="card youtube" href="https://www.youtube.com" target="_self">
+      <div class="logo">▶ YouTube</div>
+      <div class="name">YouTube</div>
+    </a>
+  </div>
+  <footer>按 <kbd>F11</kbd> 全螢幕 · 雙字幕請搭配 Language Reactor / Trancy 擴充功能</footer>
+</body>
+</html>
