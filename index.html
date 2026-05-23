@@ -1,123 +1,201 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#000000">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <title>客廳串流啟動器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+  <title>Stream</title>
   <style>
-    :root {
-      --bg: #0a0a0a;
-      --fg: #f5f5f5;
-      --muted: #888;
-    }
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; }
+
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
-      background: var(--bg);
-      color: var(--fg);
-      font-family: -apple-system, "PingFang TC", "Helvetica Neue", sans-serif;
+      background: #000;
+      font-family: 'Inter', -apple-system, system-ui, sans-serif;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      color: #fff;
     }
+
     body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 4vh 4vw;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 40%, #14141a 0%, #000 70%);
+      display: grid;
+      place-items: center;
+      padding: 5vh 5vw;
     }
-    h1 {
-      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin: 0 0 4vh 0;
-    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
-      gap: 2.5vh 2.5vw;
+      gap: clamp(14px, 2vw, 28px);
       width: 100%;
-      max-width: 1400px;
-      aspect-ratio: 16 / 8;
+      max-width: 1500px;
+      aspect-ratio: 16 / 8.5;
     }
-    .card {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      border-radius: 16px;
-      text-decoration: none;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-      cursor: pointer;
-      user-select: none;
-      position: relative;
-      overflow: hidden;
-    }
-    .card:hover, .card:focus {
-      transform: scale(1.03);
-      box-shadow: 0 12px 40px rgba(255,255,255,0.08);
-      outline: none;
-    }
-    .card .logo {
-      font-size: clamp(2rem, 6vw, 5rem);
-      line-height: 1;
-    }
-    .card .name {
-      font-size: clamp(0.9rem, 1.5vw, 1.4rem);
-      margin-top: 1.5vh;
-      opacity: 0.85;
-    }
-    .netflix { background: #000; color: #e50914; border: 2px solid #e50914; }
-    .netflix .logo { font-family: "Arial Black", sans-serif; }
-    .appletv { background: #000; color: #fff; border: 2px solid #fff; }
-    .hbomax { background: linear-gradient(135deg, #5d2dff, #9013fe); color: #fff; }
-    .youtube { background: #ff0000; color: #fff; }
 
-    footer {
-      margin-top: 3vh;
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.05em;
+    .card {
+      position: relative;
+      display: grid;
+      place-items: center;
+      border-radius: clamp(16px, 1.4vw, 24px);
+      text-decoration: none;
+      overflow: hidden;
+      cursor: pointer;
+      isolation: isolate;
+      background: #0d0d0d;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        inset 0 0 0 1px rgba(255,255,255,0.05),
+        0 30px 60px -30px rgba(0,0,0,0.9);
+      transition:
+        transform 0.5s cubic-bezier(.2,.8,.2,1),
+        box-shadow 0.5s cubic-bezier(.2,.8,.2,1);
     }
-    kbd {
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 4px;
-      padding: 2px 6px;
-      font-family: inherit;
-      font-size: 0.85em;
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: radial-gradient(circle at 50% 100%, var(--glow, transparent) 0%, transparent 65%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      z-index: -1;
+    }
+
+    .card:hover,
+    .card:focus-visible {
+      transform: translateY(-6px);
+      outline: none;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.1),
+        inset 0 0 0 1px rgba(255,255,255,0.08),
+        0 40px 90px -20px var(--shadow, rgba(0,0,0,0.95));
+    }
+    .card:hover::before,
+    .card:focus-visible::before { opacity: 1; }
+
+    .mark {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* ── Netflix ─────────────────────────── */
+    .netflix {
+      --glow: rgba(229,9,20,0.35);
+      --shadow: rgba(229,9,20,0.25);
+    }
+    .netflix .mark {
+      font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
+      font-weight: 400;
+      font-size: clamp(2.6rem, 7.5vw, 5.4rem);
+      color: #e50914;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Apple TV+ ───────────────────────── */
+    .appletv {
+      --glow: rgba(255,255,255,0.15);
+      --shadow: rgba(255,255,255,0.12);
+    }
+    .appletv .mark {
+      gap: 0.18em;
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.2rem, 6vw, 4.4rem);
+      color: #fff;
+      letter-spacing: -0.05em;
+    }
+    .appletv .apple {
+      width: 0.95em;
+      height: 0.95em;
+      fill: #fff;
+      transform: translateY(-0.04em);
+    }
+    .appletv sup {
+      font-size: 0.5em;
+      vertical-align: 0.85em;
+      font-weight: 500;
+      margin-left: -0.05em;
+    }
+
+    /* ── Max ─────────────────────────────── */
+    .max {
+      background: linear-gradient(135deg, #06081f 0%, #0a1ea8 55%, #002be7 100%);
+      --glow: rgba(64,120,255,0.45);
+      --shadow: rgba(0,43,231,0.4);
+    }
+    .max .mark {
+      font-family: 'Inter', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 8.5vw, 6.5rem);
+      color: #fff;
+      letter-spacing: -0.08em;
+    }
+
+    /* ── YouTube ─────────────────────────── */
+    .youtube {
+      --glow: rgba(255,0,0,0.4);
+      --shadow: rgba(255,0,0,0.3);
+    }
+    .youtube .yt {
+      width: clamp(120px, 22vw, 240px);
+      height: auto;
+    }
+
+    /* Mobile fallback */
+    @media (max-width: 720px) {
+      .grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        aspect-ratio: auto;
+        height: 88vh;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>客廳串流啟動器</h1>
-  <div class="grid">
-    <a class="card netflix" href="https://www.netflix.com" target="_self">
-      <div class="logo">NETFLIX</div>
-      <div class="name">網飛</div>
+  <main class="grid">
+
+    <a class="card netflix" href="https://www.netflix.com" aria-label="Netflix">
+      <span class="mark">NETFLIX</span>
     </a>
-    <a class="card appletv" href="https://tv.apple.com" target="_self">
-      <div class="logo">Apple TV+</div>
-      <div class="name">蘋果</div>
+
+    <a class="card appletv" href="https://tv.apple.com" aria-label="Apple TV+">
+      <span class="mark">
+        <svg class="apple" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M17.543 13.498c-.024-2.42 1.978-3.582 2.069-3.638-1.128-1.65-2.884-1.876-3.508-1.901-1.494-.151-2.917.88-3.677.88-.76 0-1.93-.858-3.171-.835-1.632.024-3.135.948-3.974 2.41-1.694 2.937-.433 7.282 1.215 9.667.806 1.166 1.768 2.476 3.027 2.43 1.216-.05 1.674-.787 3.144-.787 1.47 0 1.883.787 3.171.762 1.31-.024 2.138-1.188 2.937-2.36.929-1.354 1.31-2.665 1.333-2.733-.029-.014-2.557-.983-2.566-3.895zM15.099 6.298c.673-.815 1.127-1.948.999-3.074-.97.04-2.146.646-2.842 1.461-.624.723-1.171 1.877-1.025 2.984 1.084.084 2.192-.55 2.868-1.371z"/>
+        </svg>
+        <span>tv<sup>+</sup></span>
+      </span>
     </a>
-    <a class="card hbomax" href="https://play.max.com" target="_self">
-      <div class="logo">MAX</div>
-      <div class="name">HBO Max</div>
+
+    <a class="card max" href="https://play.max.com" aria-label="Max">
+      <span class="mark">max</span>
     </a>
-    <a class="card youtube" href="https://www.youtube.com" target="_self">
-      <div class="logo">▶ YouTube</div>
-      <div class="name">YouTube</div>
+
+    <a class="card youtube" href="https://www.youtube.com" aria-label="YouTube">
+      <span class="mark">
+        <svg class="yt" viewBox="0 0 90 64" aria-hidden="true">
+          <path d="M88.12 9.99a11.27 11.27 0 0 0-7.94-7.97C73.18 0 45 0 45 0S16.82 0 9.82 2.02A11.27 11.27 0 0 0 1.88 9.99C0 17.02 0 32 0 32s0 14.98 1.88 22.01a11.27 11.27 0 0 0 7.94 7.97C16.82 64 45 64 45 64s28.18 0 35.18-2.02a11.27 11.27 0 0 0 7.94-7.97C90 46.98 90 32 90 32s0-14.98-1.88-22.01z" fill="#FF0000"/>
+          <path d="M36 46l24-14-24-14z" fill="#fff"/>
+        </svg>
+      </span>
     </a>
-  </div>
-  <footer>安裝到 Chrome OS Shelf 後，點 shelf 圖示即可隨時回首頁 · 雙字幕請搭配 Language Reactor / Trancy</footer>
+
+  </main>
 </body>
 </html>
