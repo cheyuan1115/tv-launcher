@@ -215,5 +215,35 @@
     </a>
 
   </main>
+  <script>
+    (() => {
+      if (!('BroadcastChannel' in window)) return;
+      const channel = new BroadcastChannel('tv-launcher');
+      const myLoadTime = Date.now();
+      let amDuplicate = false;
+
+      const becomeDuplicate = () => {
+        if (amDuplicate) return;
+        amDuplicate = true;
+        window.close();
+        document.title = '已開啟';
+        document.body.innerHTML =
+          '<div style="display:grid;place-items:center;height:100vh;font-family:Inter,-apple-system,sans-serif;color:#888;text-align:center;padding:1rem">'
+          + '<div><div style="font-size:1.4rem;margin-bottom:0.5rem;color:#ccc">啟動器已在其他分頁開啟</div>'
+          + '<div style="font-size:0.9rem;opacity:0.6">可關閉此分頁</div></div></div>';
+      };
+
+      channel.onmessage = (e) => {
+        if (amDuplicate) return;
+        if (e.data.type === 'ping') {
+          channel.postMessage({ type: 'pong', loadTime: myLoadTime });
+        } else if (e.data.type === 'pong' && e.data.loadTime < myLoadTime) {
+          becomeDuplicate();
+        }
+      };
+
+      channel.postMessage({ type: 'ping' });
+    })();
+  </script>
 </body>
 </html>
